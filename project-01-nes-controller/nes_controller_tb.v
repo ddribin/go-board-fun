@@ -12,7 +12,7 @@ module nes_controller_tb (
 );
 
   nes_controller #(
-    .CYCLES_PER_BIT(10)
+    .CYCLES_PER_PULSE(5)
   ) controller (.*);
   
 endmodule

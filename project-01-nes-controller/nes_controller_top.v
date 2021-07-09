@@ -20,7 +20,7 @@ module nes_controller_top (
   end
 
   nes_controller #(
-    .CYCLES_PER_BIT(250)
+    .CYCLES_PER_PULSE(125)
   ) nes_controller (
     .clk(i_Clk),
     .i_rst(0),

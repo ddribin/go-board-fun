@@ -1,13 +1,13 @@
 `ifndef _NES_CONTROLLER_VH
 `define _NES_CONTROLLER_VH
 
-`define NES_BUTTON_A      8'b1000_0000
-`define NES_BUTTON_B      8'b0100_0000
-`define NES_BUTTON_SELECT 8'b0100_0000
-`define NES_BUTTON_START  8'b0001_0000
-`define NES_BUTTON_UP     8'b0000_1000
-`define NES_BUTTON_DOWN   8'b0000_0100
-`define NES_BUTTON_LEFT   8'b0000_0010
-`define NES_BUTTON_RIGHT  8'b0000_0001
+`define NES_BUTTON_A      3'd7
+`define NES_BUTTON_B      3'd6
+`define NES_BUTTON_SELECT 3'd5
+`define NES_BUTTON_START  3'd4
+`define NES_BUTTON_UP     3'd3
+`define NES_BUTTON_DOWN   3'd2
+`define NES_BUTTON_LEFT   3'd1
+`define NES_BUTTON_RIGHT  3'd0
 
 `endif

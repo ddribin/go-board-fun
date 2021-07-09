@@ -4,7 +4,7 @@ Version=Lattice Semiconductor Corporation iCEcube - Release: 2020.12.27943 - Bui
 ProjectName=nes_controller
 Vendor=SiliconBlue
 Synthesis=synplify
-ProjectVFiles=../nes_controller.v=work,../nes_controller_top.v=work
+ProjectVFiles=../nes_controller.v=work,../nes_controller_top.v=work,../synchronizer.v
 ProjectCFiles=
 CurImplementation=nes_controller_Implmnt
 Implementations=nes_controller_Implmnt

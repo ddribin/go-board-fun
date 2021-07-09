@@ -4,6 +4,7 @@
 
 add_file -verilog -lib work "../nes_controller.v" 
 add_file -verilog -lib work "../nes_controller_top.v" 
+add_file -verilog -lib work "../synchronizer.v" 
 #implementation: "nes_controller_Implmnt"
 impl -add nes_controller_Implmnt -type fpga
 

@@ -11,6 +11,7 @@ set(VERILATEST_TARGET ${PROJECT_NAME}-library)
 add_subdirectory(../verilatest verilatest)
 
 verilate(${PROJECT_NAME}-library SOURCES nes_controller_tb.v TRACE)
+verilate(${PROJECT_NAME}-library SOURCES nes_controller_top.v)
 
 find_package(Catch2 REQUIRED)
 include(CTest)

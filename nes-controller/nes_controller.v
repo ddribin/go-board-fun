@@ -19,7 +19,7 @@ module nes_controller #(
   localparam STATE_IDLE       = 3'd0;
   localparam STATE_BUTTON_A   = 3'd1;
   localparam STATE_OTHER_BUTTONS = 3'd2;
-  localparam STATE_VALID    = 3'd3;
+  localparam STATE_VALID      = 3'd3;
 
   localparam COUNT_WIDTH = $clog2(CYCLES_PER_PULSE*2);
   localparam CYCLES_PER_BIT = CYCLES_PER_PULSE*2;

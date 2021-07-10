@@ -93,14 +93,14 @@ TEST_CASE_METHOD(Fixture, "Read button A", "[project-01]")
         {85, 1}, {86, 0},
     }));
     CHECK(buttons.changes() == ChangeVector8({
-        {12, 0b00000001},            // Shift in Button A
-        {22, 0b00000010},            // Shift in Button B
-        {32, 0b00000100},            // Shift in Button Select
-        {42, 0b00001000},            // Shift in Button Start
-        {52, 0b00010000},            // Shift in Button Up
-        {62, 0b00100000},            // Shift in Button Down
-        {72, 0b01000000},            // Shift in Button Left
-        {82, 0b10000000},            // Shift in Button Right
+        {12, 0b00000001},   // Shift in Button A
+        {22, 0b00000010},   // Shift in Button B
+        {32, 0b00000100},   // Shift in Button Select
+        {42, 0b00001000},   // Shift in Button Start
+        {52, 0b00010000},   // Shift in Button Up
+        {62, 0b00100000},   // Shift in Button Down
+        {72, 0b01000000},   // Shift in Button Left
+        {82, 0b10000000},   // Shift in Button Right
         {87, 0b00000000},   // Idle
     }));
 }
@@ -121,14 +121,14 @@ TEST_CASE_METHOD(Fixture, "Read button B", "[project-01]")
         {85, 1}, {86, 0},
     }));
     CHECK(buttons.changes() == ChangeVector8({
-//      {12, 0b00000000},            // Shift in Button A
-        {22, 0b00000001},            // Shift in Button B
-        {32, 0b00000010},            // Shift in Button Select
-        {42, 0b00000100},            // Shift in Button Start
-        {52, 0b00001000},            // Shift in Button Up
-        {62, 0b00010000},            // Shift in Button Down
-        {72, 0b00100000},            // Shift in Button Left
-        {82, 0b01000000},            // Shift in Button Right
+//      {12, 0b00000000},   // Shift in Button A
+        {22, 0b00000001},   // Shift in Button B
+        {32, 0b00000010},   // Shift in Button Select
+        {42, 0b00000100},   // Shift in Button Start
+        {52, 0b00001000},   // Shift in Button Up
+        {62, 0b00010000},   // Shift in Button Down
+        {72, 0b00100000},   // Shift in Button Left
+        {82, 0b01000000},   // Shift in Button Right
         {87, 0b00000000},   // Idle
     }));
 }
@@ -178,14 +178,14 @@ TEST_CASE_METHOD(Fixture, "Read button right", "[project-01]")
         {85, 1}, {86, 0},
     }));
     CHECK(buttons.changes() == ChangeVector8({
-    //  {12, 0b00000000},            // Shift in Button A
-    //  {22, 0b00000000},            // Shift in Button B
-    //  {32, 0b00000000},            // Shift in Button Select
-    //  {42, 0b00000000},            // Shift in Button Start
-    //  {52, 0b00000000},            // Shift in Button Up
-    //  {62, 0b00000000},            // Shift in Button Down
-    //  {72, 0b00000000},            // Shift in Button Left
-        {82, 0b00000001},            // Shift in Button Right
+    //  {12, 0b00000000},   // Shift in Button A
+    //  {22, 0b00000000},   // Shift in Button B
+    //  {32, 0b00000000},   // Shift in Button Select
+    //  {42, 0b00000000},   // Shift in Button Start
+    //  {52, 0b00000000},   // Shift in Button Up
+    //  {62, 0b00000000},   // Shift in Button Down
+    //  {72, 0b00000000},   // Shift in Button Left
+        {82, 0b00000001},   // Shift in Button Right
         {87, 0b00000000},   // Idle
     }));
 }

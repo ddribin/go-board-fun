@@ -3,4 +3,4 @@ project(go-board-fun)
 
 include(CTest)
 
-add_subdirectory(project-01-nes-controller)
+add_subdirectory(nes-controller)

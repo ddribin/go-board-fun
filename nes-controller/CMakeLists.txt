@@ -18,7 +18,7 @@ include(CTest)
 include(Catch)
 
 add_executable(${PROJECT_NAME}-tests
-    test-nes-controller.cpp
+    test_nes_controller.cpp
     ../common/test-common.hpp
     ../common/test-main.cpp
 )

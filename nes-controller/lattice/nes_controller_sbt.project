@@ -4,7 +4,7 @@ Version=Lattice Semiconductor Corporation iCEcube - Release: 2020.12.27943 - Bui
 ProjectName=nes_controller
 Vendor=SiliconBlue
 Synthesis=synplify
-ProjectVFiles=../nes_controller.v=work,../nes_controller_top.v=work,../synchronizer.v
+ProjectVFiles=../nes_controller.v=work,../nes_controller_top.v=work,../synchronizer.v=work
 ProjectCFiles=
 CurImplementation=nes_controller_Implmnt
 Implementations=nes_controller_Implmnt
@@ -47,7 +47,7 @@ NetlistFile=nes_controller_Implmnt/nes_controller.edf
 AdditionalEDIFFile=
 IPEDIFFile=
 DesignLib=nes_controller_Implmnt/sbt/netlist/oadb-nes_controller_top
-DesignView=_rt
+DesignView=
 DesignCell=nes_controller_top
 SynthesisSDCFile=nes_controller_Implmnt/nes_controller.scf
 UserPinConstraintFile=

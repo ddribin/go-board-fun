@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(project-01-nes-controller VERSION 1.0.0)
+project(nes-controller VERSION 1.0.0)
 
 find_package(verilator HINTS $ENV{VERILATOR_ROOT})
 

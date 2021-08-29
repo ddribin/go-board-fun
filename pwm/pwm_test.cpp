@@ -21,16 +21,16 @@ struct PwmFixture : TestFixture<UUT>
     {
     }
 
-    void setupTop(uint8_t top_)
+    void setupTop(uint8_t top_, uint64_t time_ = 1)
     {
-        top.addInputs({{1, top_}, {2, 0}});
-        topValid.addInputs({{1, 1}, {2, 0}});
+        top.addInputs({{time_, top_}, {time_+1, 0}});
+        topValid.addInputs({{time_, 1}, {time_+1, 0}});
     }
 
-    void setupCompare(uint8_t compare_)
+    void setupCompare(uint8_t compare_, uint64_t time_ = 1)
     {
-        compare.addInputs({{1, compare_}, {2, 0}});
-        compareValid.addInputs({{1, 1}, {2, 0}});
+        compare.addInputs({{time_, compare_}, {time_+1, 0}});
+        compareValid.addInputs({{time_, 1}, {time_+1, 0}});
     }
 };
 
@@ -95,5 +95,65 @@ TEST_CASE_METHOD(Fixture, "Test 16/16", "[pwm]")
     bench.tick(35);
     CHECK(pwm.changes() == ChangeVector8({
         {2,  1},
+    }));
+}
+
+TEST_CASE_METHOD(Fixture, "Test updating compare up while running", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_update_compare_up.vcd");
+    setupTop(15);
+    setupCompare(1);
+    setupCompare(4, 5); // 5 is the middle of the first cycle
+
+    bench.tick(40);
+    CHECK(pwm.changes() == ChangeVector8({
+        {2,  1}, {3,  0},
+        {18, 1}, {22, 0},
+        {34, 1}, {38, 0},
+    }));
+}
+
+TEST_CASE_METHOD(Fixture, "Test updating compare down while running", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_update_compare_down.vcd");
+    setupTop(15);
+    setupCompare(4);
+    setupCompare(1, 5); // 5 is the middle of the first high cycle
+
+    bench.tick(40);
+    CHECK(pwm.changes() == ChangeVector8({
+        {2,  1}, {6,  0},
+        {18, 1}, {19, 0},
+        {34, 1}, {35, 0},
+    }));
+}
+
+TEST_CASE_METHOD(Fixture, "Test updating compare on last clock of first cycle", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_update_compare_down_last.vcd");
+    setupTop(15);
+    setupCompare(4);
+    setupCompare(1, 17); // 17 is the last clock of the first cycle
+
+    bench.tick(40);
+    CHECK(pwm.changes() == ChangeVector8({
+        {2,  1}, {6,  0},
+        {18, 1}, {19, 0},
+        {34, 1}, {35, 0},
+    }));
+}
+
+TEST_CASE_METHOD(Fixture, "Test updating compare on first clock of second cycle", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_update_compare_down_first.vcd");
+    setupTop(15);
+    setupCompare(4);
+    setupCompare(1, 18); // 18 is the first clock of the second cycle
+
+    bench.tick(40);
+    CHECK(pwm.changes() == ChangeVector8({
+        {2,  1}, {6,  0},
+        {18, 1}, {22, 0},
+        {34, 1}, {35, 0},
     }));
 }

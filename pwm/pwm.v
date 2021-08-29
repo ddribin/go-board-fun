@@ -44,14 +44,11 @@ module pwm #(
       r_latched_compare <= i_compare;
     end
 
-    // Update top and compare only when the counter is 0.
-    if (r_counter == 0) begin
-      r_top <= r_latched_top;
-      r_compare <= r_latched_compare;
-    end
-
     if (r_counter == r_top) begin
       r_counter <= 0;
+      // Update top and compare only when the counter going to 0.
+      r_top <= r_latched_top;
+      r_compare <= r_latched_compare;
     end else begin
       r_counter <= r_counter + 1;
     end

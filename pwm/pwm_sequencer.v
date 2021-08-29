@@ -14,7 +14,7 @@ module pwm_sequencer (
   assign o_top_valid = w_valid;
   assign o_top = 8'hFF;
   assign o_compare_valid = w_valid;
-  assign o_compare = 9'h7F;
+  assign o_compare = 9'h80;
 
   always @(posedge i_clk) begin
     if (r_count[3] == 0) begin

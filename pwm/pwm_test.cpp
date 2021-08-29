@@ -98,6 +98,46 @@ TEST_CASE_METHOD(Fixture, "Test 16/16", "[pwm]")
     }));
 }
 
+// ---
+
+TEST_CASE_METHOD(Fixture, "Test 0/8", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_0_of_8.vcd");
+    setupTop(7);
+    setupCompare(0);
+
+    bench.tick(25);
+    CHECK(pwm.changes() == ChangeVector8());
+}
+
+TEST_CASE_METHOD(Fixture, "Test 4/8", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_4_of_8.vcd");
+    setupTop(7);
+    setupCompare(4);
+
+    bench.tick(25);
+    CHECK(pwm.changes() == ChangeVector8({
+        {2,  1}, {6,  0},
+        {10, 1}, {14, 0},
+        {18, 1}, {22, 0},
+    }));
+}
+
+TEST_CASE_METHOD(Fixture, "Test 8/8", "[pwm]")
+{
+    bench.openTrace("/tmp/pwm_8_of_8.vcd");
+    setupTop(7);
+    setupCompare(8);
+
+    bench.tick(25);
+    CHECK(pwm.changes() == ChangeVector8({
+        {2,  1},
+    }));
+}
+
+// ---
+
 TEST_CASE_METHOD(Fixture, "Test updating compare up while running", "[pwm]")
 {
     bench.openTrace("/tmp/pwm_update_compare_up.vcd");

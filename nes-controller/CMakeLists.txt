@@ -1,30 +1,25 @@
-cmake_minimum_required(VERSION 3.19)
-project(nes-controller VERSION 1.0.0)
+set(BASE_NAME nes-controller)
 
-find_package(verilator HINTS $ENV{VERILATOR_ROOT})
+set(LIB_TARGET_NAME ${BASE_NAME}-library)
+add_library(${LIB_TARGET_NAME} STATIC)
+target_compile_features(${LIB_TARGET_NAME} PUBLIC cxx_std_11)
 
-add_library(${PROJECT_NAME}-library STATIC)
-target_compile_features(${PROJECT_NAME}-library PUBLIC cxx_std_11)
-target_include_directories(${PROJECT_NAME}-library PUBLIC . ../verilatest)
+verilate(${LIB_TARGET_NAME} SOURCES nes_controller_tb.v TRACE)
+verilate(${LIB_TARGET_NAME} SOURCES nes_controller_top.v)
 
-verilatest_setup(${PROJECT_NAME}-library)
-
-verilate(${PROJECT_NAME}-library SOURCES nes_controller_tb.v TRACE)
-verilate(${PROJECT_NAME}-library SOURCES nes_controller_top.v)
-
-find_package(Catch2 REQUIRED)
-include(CTest)
 include(Catch)
 
-add_executable(${PROJECT_NAME}-tests
+set(TEST_TARGET_NAME ${BASE_NAME}-tests)
+add_executable(${TEST_TARGET_NAME}
     test_nes_controller.cpp
     ../common/test-common.hpp
     ../common/test-main.cpp
 )
 
-set(TEST_TARGET_NAME ${PROJECT_NAME}-tests)
+verilatest_setup(${TEST_TARGET_NAME})
+
 target_include_directories(${TEST_TARGET_NAME} PRIVATE ../common)
 target_link_libraries(${TEST_TARGET_NAME} PRIVATE
-    ${PROJECT_NAME}-library Catch2::Catch2)
+    ${LIB_TARGET_NAME} Catch2::Catch2)
 target_compile_definitions(${TEST_TARGET_NAME} PRIVATE VERILATEST_TRACE=1)
 catch_discover_tests(${TEST_TARGET_NAME})

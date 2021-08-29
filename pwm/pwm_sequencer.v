@@ -9,16 +9,26 @@ module pwm_sequencer (
   output wire       o_compare_valid
 );
   
-  reg [3:0]   r_count = 0;
-  wire w_valid = r_count == 4;
+  localparam CLOCK_FREQ_HZ = 25_000_000;
+  localparam STEP_FREQ_HZ = CLOCK_FREQ_HZ / 256;
+  localparam STEP = 97_656;
+  localparam W = $clog2(STEP) - 1;
+
+  reg [W:0]   r_count = 0;
+  reg [8:0]   r_compare = 0;
+
+  wire w_valid = r_count == 0;
   assign o_top_valid = w_valid;
   assign o_top = 8'hFF;
   assign o_compare_valid = w_valid;
-  assign o_compare = 9'h80;
+  assign o_compare = r_compare;
+  wire [W:0] w_top = STEP - 1;
 
   always @(posedge i_clk) begin
-    if (r_count[3] == 0) begin
-      r_count <= r_count + 1;
+    r_count <= r_count + 1;
+    if (r_count == STEP - 1) begin
+      r_count <= 0;
+      r_compare <= r_compare + 1;
     end
   end
 

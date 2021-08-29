@@ -7,8 +7,7 @@ add_library(${PROJECT_NAME}-library STATIC)
 target_compile_features(${PROJECT_NAME}-library PUBLIC cxx_std_11)
 target_include_directories(${PROJECT_NAME}-library PUBLIC . ../verilatest)
 
-set(VERILATEST_TARGET ${PROJECT_NAME}-library)
-add_subdirectory(../verilatest verilatest)
+verilatest_setup(${PROJECT_NAME}-library)
 
 verilate(${PROJECT_NAME}-library SOURCES nes_controller_tb.v TRACE)
 verilate(${PROJECT_NAME}-library SOURCES nes_controller_top.v)
@@ -23,7 +22,9 @@ add_executable(${PROJECT_NAME}-tests
     ../common/test-main.cpp
 )
 
-target_include_directories(${PROJECT_NAME}-tests PRIVATE ../common)
-target_link_libraries(${PROJECT_NAME}-tests PRIVATE
+set(TEST_TARGET_NAME ${PROJECT_NAME}-tests)
+target_include_directories(${TEST_TARGET_NAME} PRIVATE ../common)
+target_link_libraries(${TEST_TARGET_NAME} PRIVATE
     ${PROJECT_NAME}-library Catch2::Catch2)
-catch_discover_tests(${PROJECT_NAME}-tests)
+target_compile_definitions(${TEST_TARGET_NAME} PRIVATE VERILATEST_TRACE=1)
+catch_discover_tests(${TEST_TARGET_NAME})

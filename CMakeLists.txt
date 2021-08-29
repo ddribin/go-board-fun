@@ -11,3 +11,4 @@ include(CTest)
 add_subdirectory(verilatest)
 
 add_subdirectory(nes-controller)
+add_subdirectory(pwm)

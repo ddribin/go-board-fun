@@ -1,10 +1,6 @@
 `default_nettype none
 
-module pwm_sequencer #(
-  parameter RESOLUTION = 4,
-  parameter TOP = 256,
-  parameter PERIOD = 12_500_000
-) (
+module pwm_sequencer (
   input wire        i_clk,
 
   output wire [7:0] o_top,
@@ -13,10 +9,9 @@ module pwm_sequencer #(
   output wire       o_compare_valid
 );
 
-  // localparam STEP = 7; // PERIOD/(TOP+1); // = 35/(4+1) = 35/5 = 7
   // localparam STEP = PERIOD/(TOP+1);
-  localparam STEP = 97_276;
-  localparam STEP_WIDTH = $clog2(STEP); // = 3
+  localparam STEP = 97_276; // = 25_000_000/(256+1)
+  localparam STEP_WIDTH = $clog2(STEP);
   
   reg [STEP_WIDTH-1:0]   r_step_count = 0;
   reg [8:0]   r_compare = 0;

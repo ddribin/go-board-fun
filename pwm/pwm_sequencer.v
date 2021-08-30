@@ -2,7 +2,7 @@
 
 module pwm_sequencer #(
   parameter RESOLUTION = 4,
-  parameter TOP = 4,
+  parameter TOP = 256,
   parameter PERIOD = 12_500_000
 ) (
   input wire        i_clk,
@@ -52,43 +52,5 @@ module pwm_sequencer #(
       r_step_count <= r_step_count + 1;
     end
   end
-
-
-  // localparam STEP = 97_656;  localparam W = 25; // $clog2(STEP) - 1;
-  // localparam STEP_PERIOD = PERIOD / TOP;
-  // localparam STEP_COUNT_WIDTH = $clog2(STEP_PERIOD);
-
-  // reg [W:0]   r_count = 0;
-  // reg [4:0]   r_compare = 0;
-  // reg [STEP_COUNT_WIDTH-1:0] r_step_count = 0;
-  // reg         r_valid = 0;
-
-  // wire w_valid = r_step_count == 0;
-  // assign o_top_valid = w_valid;
-  // /* verilator lint_off WIDTH */
-  // assign o_top = TOP-1;
-  // assign o_compare_valid = w_valid;
-  // // assign o_compare = r_compare;
-  // // wire [W:0] w_top = STEP - 1;
-
-  // always @(posedge i_clk) begin
-  //   if (r_step_count == 16-1) begin
-  //     r_step_count <= 0;
-  //     r_compare <= r_compare + 1;
-  //   end else begin
-  //     r_step_count <= r_step_count + 1;
-  //   end
-    
-    // if (r_count == STEP - 1) begin
-    //   r_count <= 0;
-    // end else begin
-    //   r_count <= r_count + 1;
-    // end
-    // r_compare <= w_compare_count[8:0];
-// end
-
-  // wire [W:0] w_compare_count = r_count / 4;
-  // assign o_compare = w_compare_count[8:0];
-  // assign o_compare = r_compare;
 
 endmodule

@@ -5,6 +5,7 @@ module pwm_top (
 
   output wire io_PMOD_1,
   output wire io_PMOD_2,
+  output wire io_PMOD_3,
   output wire o_LED_1
 );
   
@@ -21,17 +22,20 @@ module pwm_top (
   );
 
   wire w_pwm;
+  wire w_cycle_end;
   pwm pwm(
     .i_clk(i_Clk),
     .i_top(w_top),
     .i_top_valid(w_top_valid),
     .i_compare(w_compare),
     .i_compare_valid(w_compare_valid),
-    .o_pwm(w_pwm)
+    .o_pwm(w_pwm),
+    .o_cycle_end(w_cycle_end)
   );
 
   assign io_PMOD_1 = w_pwm;
-  assign io_PMOD_2 = ~w_pwm;
+  assign io_PMOD_2 = w_cycle_end;
+  assign io_PMOD_3 = ~w_pwm;
   assign o_LED_1 = w_pwm;
 
 endmodule

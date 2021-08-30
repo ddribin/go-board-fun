@@ -10,7 +10,8 @@ module pwm #(
   input wire [RESOLUTION:0]     i_compare,
   input wire                    i_compare_valid,
 
-  output wire                   o_pwm
+  output wire                   o_pwm,
+  output reg                    o_cycle_end
 );
 
   // The counter, r_counter, repeatedly counts from 0 to r_top. When r_counter
@@ -49,8 +50,10 @@ module pwm #(
       // Update top and compare only when the counter going to 0.
       r_top <= r_latched_top;
       r_compare <= r_latched_compare;
+      o_cycle_end <= 1;
     end else begin
       r_counter <= r_counter + 1;
+      o_cycle_end <= 0;
     end
   end
 

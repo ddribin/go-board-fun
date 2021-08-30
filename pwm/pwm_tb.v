@@ -7,7 +7,8 @@ module pwm_tb (
   input wire [4:0]  i_compare,
   input wire        i_compare_valid,
 
-  output wire       o_pwm
+  output wire       o_pwm,
+  output wire       o_cycle_end
 );
 
   pwm #(

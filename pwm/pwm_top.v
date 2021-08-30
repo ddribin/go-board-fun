@@ -28,7 +28,7 @@ module pwm_top (
     .i_cycle(w_cycle_end),
     .o_phase(w_phase)
   );
-  wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd64 : 9'd192;
+  wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd64;
 
   wire w_pwm;
   pwm pwm(
@@ -48,7 +48,7 @@ module pwm_top (
 
 
   assign io_PMOD_1 = w_pwm;
-  assign io_PMOD_2 = (r_last_phase_31 == 1) && (w_phase[31] == 0);
+  assign io_PMOD_2 = w_phase[31];
   assign io_PMOD_3 = ~w_pwm;
   // assign o_LED_1 = w_pwm;
 

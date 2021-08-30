@@ -28,7 +28,12 @@ module pwm_top (
     .i_cycle(w_cycle_end),
     .o_phase(w_phase)
   );
+
+  // Generate a pulse wave at 50% duty cycle
   wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd64;
+
+  // Generate a sawtooth wave
+  // wire [8:0]  w_compare = {1'b0, w_phase[31:24]};
 
   wire w_pwm;
   pwm pwm(

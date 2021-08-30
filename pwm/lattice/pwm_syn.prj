@@ -5,6 +5,7 @@
 add_file -verilog -lib work "../pwm.v" 
 add_file -verilog -lib work "../pwm_sequencer.v" 
 add_file -verilog -lib work "../pwm_top.v" 
+add_file -verilog -lib work "../phase_generator.v" 
 #implementation: "pwm_Implmnt"
 impl -add pwm_Implmnt -type fpga
 

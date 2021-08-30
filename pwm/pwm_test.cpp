@@ -197,10 +197,3 @@ TEST_CASE_METHOD(Fixture, "Test updating compare on first clock of second cycle"
         {34, 1}, {35, 0},
     }));
 }
-
-// TEST_CASE_METHOD(Fixture, "Test sequencer", "[pwm]")
-// {
-//     bench.openTrace("/tmp/pwm_sequencer.vcd");
-
-//     bench.tick(128);
-// }

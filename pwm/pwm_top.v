@@ -21,11 +21,16 @@ module pwm_top (
   //   .o_compare_valid(w_compare_valid)
   // );
 
+  // localparam DELTA_PHASE = (FREQ_HZ / SAMPLE_HZ) * 2^32;
+  // localparam DELTA_PHASE = 32'd18_898; // 1100Hz
+  // localparam DELTA_PHASE = 32'd37_795; // 220Hz
+  localparam DELTA_PHASE = 32'd75_591; // 440Hz
+  // localparam DELTA_PHASE = 32'd151_183; // 880Hz
   wire [31:0] w_phase;
-  wire w_cycle_end;
   phase_generator phase_generator(
     .i_clk(i_Clk),
-    .i_cycle(w_cycle_end),
+    .i_phase_delta(DELTA_PHASE),
+    .i_phase_delta_valid(1),
     .o_phase(w_phase)
   );
 
@@ -44,6 +49,7 @@ module pwm_top (
   wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 2;
 
   wire w_pwm;
+  wire w_cycle_end;
   pwm pwm(
     .i_clk(i_Clk),
     .i_top(8'hFF),

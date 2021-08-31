@@ -42,15 +42,15 @@ module pwm_top (
   phase_generator phase_generator(
     .i_clk(i_Clk),
     .i_phase_delta(w_phase_delta),
-    .i_phase_delta_valid(1),
+    .i_phase_delta_valid(1'b1),
     .o_phase(w_phase)
   );
 
   // Generate a pulse wave at 50% duty cycle
-  // wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd64;
+  // wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd32;
 
   // Generate a sawtooth wave
-  // wire [8:0]  w_compare = {1'b0, w_phase[31:24]};
+  // wire [8:0]  w_compare = {1'b0, w_phase[31:24]} >> 2;
 
   // Generate a sine wave
   reg [8:0] sin_table[255:0];
@@ -58,7 +58,7 @@ module pwm_top (
     $readmemh("sin_table.txt", sin_table);
   end
   wire [7:0]  w_sin_lookup = w_phase[31:24];
-  wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 2;
+  wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 3;
 
   wire w_pwm;
   wire w_cycle_end;

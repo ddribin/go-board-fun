@@ -54,7 +54,7 @@ module pwm_top (
 
   // Generate a sine wave
   wire [8:0]  w_compare;
-  sin_generator sin_generator(.i_phase(w_phase), .o_compare(w_compare));
+  sine_generator sine_generator(.i_phase(w_phase), .o_compare(w_compare));
 
   wire w_pwm;
   wire w_cycle_end;

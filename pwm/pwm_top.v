@@ -21,15 +21,27 @@ module pwm_top (
   //   .o_compare_valid(w_compare_valid)
   // );
 
+  wire [7:0]    w_top;
+  wire          w_top_valid;
+  wire [31:0]   w_phase_delta;
+  wire          w_compare_valid = 1;
+  pwm_note_sequencer sequencer(
+    .i_clk(i_Clk),
+    .o_top(w_top),
+    .o_top_valid(w_top_valid),
+    .o_phase_delta(w_phase_delta)
+  );
+
   // localparam DELTA_PHASE = (FREQ_HZ / SAMPLE_HZ) * 2^32;
   // localparam DELTA_PHASE = 32'd18_898; // 1100Hz
   // localparam DELTA_PHASE = 32'd37_795; // 220Hz
   localparam DELTA_PHASE = 32'd75_591; // 440Hz
   // localparam DELTA_PHASE = 32'd151_183; // 880Hz
+  // localparam DELTA_PHASE = 32'd22_473; // C3
   wire [31:0] w_phase;
   phase_generator phase_generator(
     .i_clk(i_Clk),
-    .i_phase_delta(DELTA_PHASE),
+    .i_phase_delta(w_phase_delta),
     .i_phase_delta_valid(1),
     .o_phase(w_phase)
   );
@@ -52,10 +64,10 @@ module pwm_top (
   wire w_cycle_end;
   pwm pwm(
     .i_clk(i_Clk),
-    .i_top(8'hFF),
-    .i_top_valid(1),
+    .i_top(w_top),
+    .i_top_valid(w_top_valid),
     .i_compare(w_compare),
-    .i_compare_valid(1),
+    .i_compare_valid(w_compare_valid),
     .o_pwm(w_pwm),
     .o_cycle_end(w_cycle_end)
   );

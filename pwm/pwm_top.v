@@ -53,12 +53,8 @@ module pwm_top (
   // wire [8:0]  w_compare = {1'b0, w_phase[31:24]} >> 2;
 
   // Generate a sine wave
-  reg [8:0] sin_table[255:0];
-  initial begin
-    $readmemh("sin_table.txt", sin_table);
-  end
-  wire [7:0]  w_sin_lookup = w_phase[31:24];
-  wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 2;
+  wire [8:0]  w_compare;
+  sin_generator sin_generator(.i_phase(w_phase), .o_compare(w_compare));
 
   wire w_pwm;
   wire w_cycle_end;

@@ -58,7 +58,7 @@ module pwm_top (
     $readmemh("sin_table.txt", sin_table);
   end
   wire [7:0]  w_sin_lookup = w_phase[31:24];
-  wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 3;
+  wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 2;
 
   wire w_pwm;
   wire w_cycle_end;

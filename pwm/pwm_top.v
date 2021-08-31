@@ -30,10 +30,18 @@ module pwm_top (
   );
 
   // Generate a pulse wave at 50% duty cycle
-  wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd64;
+  // wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd64;
 
   // Generate a sawtooth wave
   // wire [8:0]  w_compare = {1'b0, w_phase[31:24]};
+
+  // Generate a sine wave
+  reg [8:0] sin_table[255:0];
+  initial begin
+    $readmemh("sin_table.txt", sin_table);
+  end
+  wire [7:0]  w_sin_lookup = w_phase[31:24];
+  wire [8:0]  w_compare = sin_table[w_sin_lookup] >> 2;
 
   wire w_pwm;
   pwm pwm(
@@ -50,7 +58,6 @@ module pwm_top (
   always @(posedge i_Clk) begin
     r_last_phase_31 <= w_phase[31];
   end
-
 
   assign io_PMOD_1 = w_pwm;
   assign io_PMOD_2 = w_phase[31];

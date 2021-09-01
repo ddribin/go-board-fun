@@ -13,15 +13,17 @@ module pwm_note_sequencer (
   localparam DURATION_WIDTH = $clog2(DURATION);
 
   // phase delta = (FREQ_HZ / SAMPLE_HZ) * 2^32;
-  localparam NOTE_C3 = 32'd22_473;
-  localparam NOTE_D3 = 32'd25_226;
-  localparam NOTE_E3 = 32'd28_315;
-  localparam NOTE_F3 = 32'd29_998;
-  localparam NOTE_G3 = 32'd33_672;
-  localparam NOTE_A3 = 32'd37_796;
-  localparam NOTE_B3 = 32'd42_424;
-  localparam NOTE_C4 = 32'd44_947;
-  localparam NOTE_A4 = 32'd75_591; // 440Hz
+  localparam NOTE_A2 = 32'd18_898;    // 110.0000 Hz
+  localparam NOTE_C3 = 32'd22_473;    // 130.8128 Hz
+  localparam NOTE_D3 = 32'd25_226;    // 146.8324 Hz
+  localparam NOTE_E3 = 32'd28_315;    // 164.8138 Hz
+  localparam NOTE_F3 = 32'd29_998;    // 174.6141 Hz
+  localparam NOTE_G3 = 32'd33_672;    // 195.9977 Hz
+  localparam NOTE_A3 = 32'd37_796;    // 220.0000 Hz
+  localparam NOTE_B3 = 32'd42_424;    // 246.9417 Hz
+  localparam NOTE_C4 = 32'd44_947;    // 261.6256 Hz
+  localparam NOTE_A4 = 32'd75_591;    // 440.0000 Hz
+  localparam NOTE_A5 = 32'd151_183;   // 880.0000 Hz
 
 
   reg [DURATION_WIDTH-1:0] r_duration_count = 0;

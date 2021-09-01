@@ -32,12 +32,6 @@ module pwm_top (
     .o_phase_delta(w_phase_delta)
   );
 
-  // localparam DELTA_PHASE = (FREQ_HZ / SAMPLE_HZ) * 2^32;
-  // localparam DELTA_PHASE = 32'd18_898; // 1100Hz
-  // localparam DELTA_PHASE = 32'd37_795; // 220Hz
-  localparam DELTA_PHASE = 32'd75_591; // 440Hz
-  // localparam DELTA_PHASE = 32'd151_183; // 880Hz
-  // localparam DELTA_PHASE = 32'd22_473; // C3
   wire [31:0] w_phase;
   phase_generator phase_generator(
     .i_clk(i_Clk),

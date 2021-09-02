@@ -13,21 +13,36 @@ module pwm_note_sequencer (
   localparam DURATION_WIDTH = $clog2(DURATION);
 
   // phase delta = (FREQ_HZ / SAMPLE_HZ) * 2^32;
-  localparam NOTE_A2 = 32'd18_898;    // 110.0000 Hz
-  localparam NOTE_C3 = 32'd22_473;    // 130.8128 Hz
-  localparam NOTE_D3 = 32'd25_226;    // 146.8324 Hz
-  localparam NOTE_E3 = 32'd28_315;    // 164.8138 Hz
-  localparam NOTE_F3 = 32'd29_998;    // 174.6141 Hz
-  localparam NOTE_G3 = 32'd33_672;    // 195.9977 Hz
-  localparam NOTE_A3 = 32'd37_796;    // 220.0000 Hz
-  localparam NOTE_B3 = 32'd42_424;    // 246.9417 Hz
-  localparam NOTE_C4 = 32'd44_947;    // 261.6256 Hz
-  localparam NOTE_A4 = 32'd75_591;    // 440.0000 Hz
-  localparam NOTE_A5 = 32'd151_183;   // 880.0000 Hz
+  `define NOTE_RST  32'd0         // 0.000000 Hz
+
+  `define NOTE_A2   32'd18898     // 110.000000 Hz
+
+  `define NOTE_C3   32'd22473     // 130.812800 Hz
+  `define NOTE_D3   32'd25226     // 146.832400 Hz
+  `define NOTE_E3   32'd28315     // 164.813800 Hz
+  `define NOTE_F3   32'd29998     // 174.614100 Hz
+  `define NOTE_G3   32'd33672     // 195.997700 Hz
+  `define NOTE_A3   32'd37796     // 220.000000 Hz
+  `define NOTE_B3   32'd42424     // 246.941700 Hz
+
+  `define NOTE_C4   32'd44947     // 261.625600 Hz
+  `define NOTE_D4   32'd50451     // 293.664800 Hz
+  `define NOTE_E4   32'd56630     // 329.627600 Hz
+  `define NOTE_F4   32'd59997     // 349.228200 Hz
+  `define NOTE_Fs4  32'd63565     // 369.994400 Hz
+  `define NOTE_A4   32'd75591     // 440.000000 Hz
+
+  `define NOTE_C5   32'd89894     // 523.251100 Hz
+  `define NOTE_Cs5  32'd95239     // 554.365300 Hz
+  `define NOTE_Fs5  32'd127129    // 739.988800 Hz
+  `define NOTE_Gs5  32'd142698    // 830.609400 Hz
+  `define NOTE_A5   32'd151183    // 880.000000 Hz
+  `define NOTE_As5  32'd160173    // 932.327500 Hz
+  `define NOTE_B5   32'd169697    // 987.766600 Hz
 
 
   reg [DURATION_WIDTH-1:0] r_duration_count = 0;
-  reg [2:0] r_note_index = 0;
+  reg [3:0] r_note_index = 0;
 
   always @(posedge i_clk) begin
     if (r_duration_count == DURATION-1) begin
@@ -42,14 +57,22 @@ module pwm_note_sequencer (
   reg [31:0]  r_phase_delta;
   always @(*) begin
     case (r_note_index)
-      3'd0: r_phase_delta = NOTE_C3;
-      3'd1: r_phase_delta = NOTE_D3;
-      3'd2: r_phase_delta = NOTE_E3;
-      3'd3: r_phase_delta = NOTE_F3;
-      3'd4: r_phase_delta = NOTE_G3;
-      3'd5: r_phase_delta = NOTE_A3;
-      3'd6: r_phase_delta = NOTE_B3;
-      3'd7: r_phase_delta = NOTE_C4;
+      4'd00: r_phase_delta = `NOTE_Fs4;
+      4'd01: r_phase_delta = `NOTE_Cs5;
+      4'd02: r_phase_delta = `NOTE_Fs5;
+      4'd03: r_phase_delta = `NOTE_Gs5;
+      4'd04: r_phase_delta = `NOTE_Cs5;
+      4'd05: r_phase_delta = `NOTE_Fs5;
+      4'd06: r_phase_delta = `NOTE_Gs5;
+      4'd07: r_phase_delta = `NOTE_B5;
+      4'd08: r_phase_delta = `NOTE_Cs5;
+      4'd09: r_phase_delta = `NOTE_B5;
+      4'd10: r_phase_delta = `NOTE_As5;
+      4'd11: r_phase_delta = `NOTE_Cs5;
+      4'd12: r_phase_delta = `NOTE_As5;
+      4'd13: r_phase_delta = `NOTE_Gs5;
+      4'd14: r_phase_delta = `NOTE_Fs5;
+      4'd15: r_phase_delta = `NOTE_RST;
     endcase
   end
 

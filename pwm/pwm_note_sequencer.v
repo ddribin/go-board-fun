@@ -9,7 +9,8 @@ module pwm_note_sequencer (
 );
 
   // localparam DURATION = 25_000_000/4;
-  localparam DURATION = 6_250_000;
+  // localparam DURATION = 6_250_000;
+  localparam DURATION = 4_166_667; // 180 BPM: DURATION = 25MHz * 30 / 180
   localparam DURATION_WIDTH = $clog2(DURATION);
 
   // phase delta = (FREQ_HZ / SAMPLE_HZ) * 2^32;

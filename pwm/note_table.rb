@@ -17,11 +17,15 @@ NOTES = [
   ["B3",  246.9417],
   [],
   ["C4",  261.6256],
+  ["Cs4", 277.1826],
   ["D4",  293.6648],
   ["E4",  329.6276],
   ["F4",  349.2282],
   ["Fs4", 369.9944],
+  ["Gs4", 415.3047],
   ["A4",  440.0000],
+  ["As4", 466.1638],
+  ["B4",  493.8833],
   [],
   ["C5",  523.2511],
   ["Cs5", 554.3653],
@@ -30,6 +34,8 @@ NOTES = [
   ["A5",  880.0000],
   ["As5", 932.3275],
   ["B5",  987.7666],
+  [],
+  ["Cs6", 1108.731],
 ]
 SAMPLE_HZ = 25_000_000
 
@@ -37,6 +43,10 @@ COMMAND = File.basename($0)
 USAGE = "Usage: #{$COMMAND} [defines | table]"
 
 def print_note_defines
+  puts '`ifndef NOTE_TABLE_VH'
+  puts '`define NOTE_TABLE_VH'
+  puts
+
   i = 0
   NOTES.each do |note|
     if note.count == 0
@@ -49,6 +59,9 @@ def print_note_defines
     printf "`define NOTE_%-3s  6'd%-3d  // %11.5f Hz\n", name, i, freq_hz
     i += 1
   end
+
+  puts
+  puts '`endif'
 end
 
 def print_note_table

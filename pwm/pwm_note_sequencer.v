@@ -26,31 +26,30 @@ module pwm_note_sequencer (
     end
   end
 
-  wire [31:0] note_table[7:0];
-  reg [31:0]  r_phase_delta;
+  reg [5:0]  r_note;
   always @(*) begin
     case (r_note_index)
-      4'd00: r_phase_delta = `NOTE_Fs4;
-      4'd01: r_phase_delta = `NOTE_Cs5;
-      4'd02: r_phase_delta = `NOTE_Fs5;
-      4'd03: r_phase_delta = `NOTE_Gs5;
-      4'd04: r_phase_delta = `NOTE_Cs5;
-      4'd05: r_phase_delta = `NOTE_Fs5;
-      4'd06: r_phase_delta = `NOTE_Gs5;
-      4'd07: r_phase_delta = `NOTE_B5;
-      4'd08: r_phase_delta = `NOTE_Cs5;
-      4'd09: r_phase_delta = `NOTE_B5;
-      4'd10: r_phase_delta = `NOTE_As5;
-      4'd11: r_phase_delta = `NOTE_Cs5;
-      4'd12: r_phase_delta = `NOTE_As5;
-      4'd13: r_phase_delta = `NOTE_Gs5;
-      4'd14: r_phase_delta = `NOTE_Fs5;
-      4'd15: r_phase_delta = `NOTE_RST;
+      4'd00: r_note = `NOTE_Fs4;
+      4'd01: r_note = `NOTE_Cs5;
+      4'd02: r_note = `NOTE_Fs5;
+      4'd03: r_note = `NOTE_Gs5;
+      4'd04: r_note = `NOTE_Cs5;
+      4'd05: r_note = `NOTE_Fs5;
+      4'd06: r_note = `NOTE_Gs5;
+      4'd07: r_note = `NOTE_B5;
+      4'd08: r_note = `NOTE_Cs5;
+      4'd09: r_note = `NOTE_B5;
+      4'd10: r_note = `NOTE_As5;
+      4'd11: r_note = `NOTE_Cs5;
+      4'd12: r_note = `NOTE_As5;
+      4'd13: r_note = `NOTE_Gs5;
+      4'd14: r_note = `NOTE_Fs5;
+      4'd15: r_note = `NOTE_RST;
     endcase
   end
 
   assign o_top = 8'hff;
   assign o_top_valid = 1;
-  assign o_phase_delta = r_phase_delta;
-  
+  note_table note_table(.i_note(r_note), .o_compare(o_phase_delta));
+
 endmodule

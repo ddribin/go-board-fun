@@ -37,7 +37,8 @@ COMMAND = File.basename($0)
 USAGE = "Usage: #{$COMMAND} [defines | table]"
 
 def print_note_defines
-  NOTES.each_with_index do |note|
+  i = 0
+  NOTES.each do |note|
     if note.count == 0
       puts
       next
@@ -45,8 +46,30 @@ def print_note_defines
   
     name = note[0]
     freq_hz = note[1]
+    printf "`define NOTE_%-3s  6'd%-3d  // %11.5f Hz\n", name, i, freq_hz
+    i += 1
+  end
+end
+
+def print_note_table
+  i = 0
+  NOTES.each do |note|
+    if note.count == 0
+      puts
+      next
+    end
+
+    freq_hz = note[1]
     count = (freq_hz * 2**32 / SAMPLE_HZ).round
-    printf "`define NOTE_%-3s  32'd%-8d  // %11.5f Hz\n", name, count, freq_hz
+    printf "%08X  // %11.5f Hz\n", count, freq_hz
+    i += 1
+  end
+
+  separator = "\n"
+  while i < 64
+    puts "#{separator}00000000"
+    separator = ""
+    i += 1
   end
 end
 
@@ -61,6 +84,7 @@ case subcommand
 when "defines"
   print_note_defines
 when "table"
+  print_note_table
 else
   $stderr.puts USAGE
   return 1

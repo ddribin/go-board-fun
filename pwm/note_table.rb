@@ -1,8 +1,9 @@
 #!/usr/bin/env ruby
 
 require 'pp'
+require 'optparse'
 
-notes = [
+NOTES = [
   ["RST", 0],
   [],
   ["A2",  110.0000],
@@ -30,16 +31,37 @@ notes = [
   ["As5", 932.3275],
   ["B5",  987.7666],
 ]
-
 SAMPLE_HZ = 25_000_000
-notes.each_with_index do |note|
-  if note.count == 0
-    puts
-    next
-  end
 
-  name = note[0]
-  freq_hz = note[1]
-  count = (freq_hz * 2**32 / SAMPLE_HZ).round
-  printf "  `define NOTE_%-3s  32'd%-8d  // %f Hz\n", name, count, freq_hz
+COMMAND = File.basename($0)
+USAGE = "Usage: #{$COMMAND} [defines | table]"
+
+def print_note_defines
+  NOTES.each_with_index do |note|
+    if note.count == 0
+      puts
+      next
+    end
+  
+    name = note[0]
+    freq_hz = note[1]
+    count = (freq_hz * 2**32 / SAMPLE_HZ).round
+    printf "`define NOTE_%-3s  32'd%-8d  // %11.5f Hz\n", name, count, freq_hz
+  end
+end
+
+if ARGV.length != 1
+  $stderr.puts USAGE
+  return 1
+end
+
+subcommand = ARGV[0]
+
+case subcommand
+when "defines"
+  print_note_defines
+when "table"
+else
+  $stderr.puts USAGE
+  return 1
 end

@@ -1,4 +1,5 @@
 `default_nettype none
+`include "note_table.vh"
 
 module pwm_note_sequencer (
   input wire          i_clk,
@@ -12,35 +13,6 @@ module pwm_note_sequencer (
   // localparam DURATION = 6_250_000;
   localparam DURATION = 4_166_667; // 180 BPM: DURATION = 25MHz * 30 / 180
   localparam DURATION_WIDTH = $clog2(DURATION);
-
-  // phase delta = (FREQ_HZ / SAMPLE_HZ) * 2^32;
-  `define NOTE_RST  32'd0         // 0.000000 Hz
-
-  `define NOTE_A2   32'd18898     // 110.000000 Hz
-
-  `define NOTE_C3   32'd22473     // 130.812800 Hz
-  `define NOTE_D3   32'd25226     // 146.832400 Hz
-  `define NOTE_E3   32'd28315     // 164.813800 Hz
-  `define NOTE_F3   32'd29998     // 174.614100 Hz
-  `define NOTE_G3   32'd33672     // 195.997700 Hz
-  `define NOTE_A3   32'd37796     // 220.000000 Hz
-  `define NOTE_B3   32'd42424     // 246.941700 Hz
-
-  `define NOTE_C4   32'd44947     // 261.625600 Hz
-  `define NOTE_D4   32'd50451     // 293.664800 Hz
-  `define NOTE_E4   32'd56630     // 329.627600 Hz
-  `define NOTE_F4   32'd59997     // 349.228200 Hz
-  `define NOTE_Fs4  32'd63565     // 369.994400 Hz
-  `define NOTE_A4   32'd75591     // 440.000000 Hz
-
-  `define NOTE_C5   32'd89894     // 523.251100 Hz
-  `define NOTE_Cs5  32'd95239     // 554.365300 Hz
-  `define NOTE_Fs5  32'd127129    // 739.988800 Hz
-  `define NOTE_Gs5  32'd142698    // 830.609400 Hz
-  `define NOTE_A5   32'd151183    // 880.000000 Hz
-  `define NOTE_As5  32'd160173    // 932.327500 Hz
-  `define NOTE_B5   32'd169697    // 987.766600 Hz
-
 
   reg [DURATION_WIDTH-1:0] r_duration_count = 0;
   reg [3:0] r_note_index = 0;

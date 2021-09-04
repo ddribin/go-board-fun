@@ -26,14 +26,14 @@ module pwm_top (
   channel_1_pulse pulse_1(
     .i_clk(i_Clk),
     .o_output(w_compare_pulse_1),
-    .o_frame_pulse(w_frame_pulse)
+    .o_frame_pulse()
   );
 
   wire [8:0] w_compare_pulse_2;
   channel_2_pulse pulse_2(
     .i_clk(i_Clk),
     .o_output(w_compare_pulse_2),
-    .o_frame_pulse()
+    .o_frame_pulse(w_frame_pulse)
   );
 
   // Mixer

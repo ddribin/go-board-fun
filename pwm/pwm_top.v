@@ -21,54 +21,30 @@ module pwm_top (
   //   .o_compare_valid(w_compare_valid)
   // );
 
-  wire [7:0]    w_top;
-  wire          w_top_valid;
-  wire [31:0]   w_phase_delta;
-  wire          w_compare_valid = 1;
-  pwm_note_sequencer sequencer(
+  wire [8:0] w_compare_pulse_1;
+  wire w_frame_pulse;
+  channel_1_pulse pulse_1(
     .i_clk(i_Clk),
-    .o_top(w_top),
-    .o_top_valid(w_top_valid),
-    .o_phase_delta(w_phase_delta)
+    .o_output(w_compare_pulse_1),
+    .o_frame_pulse(w_frame_pulse)
   );
 
-  wire [31:0] w_phase;
-  phase_generator phase_generator(
-    .i_clk(i_Clk),
-    .i_phase_delta(w_phase_delta),
-    .i_phase_delta_valid(1'b1),
-    .o_phase(w_phase)
-  );
-
-  // Generate a pulse wave at 50% duty cycle
-  wire [8:0]  w_compare = (w_phase[31] == 1'b0)? 9'd0 : 9'd32;
-
-  // Generate a sawtooth wave
-  // wire [8:0]  w_compare = {1'b0, w_phase[31:24]} >> 2;
-
-  // Generate a sine wave
-  // wire [8:0]  w_compare;
-  // sine_generator sine_generator(.i_phase(w_phase), .o_compare(w_compare));
-
+  // Mixer
+  wire [8:0] w_compare = w_compare_pulse_1;
   wire w_pwm;
   wire w_cycle_end;
   pwm pwm(
     .i_clk(i_Clk),
-    .i_top(w_top),
-    .i_top_valid(w_top_valid),
+    .i_top(8'hff),
+    .i_top_valid(1'b1),
     .i_compare(w_compare),
-    .i_compare_valid(w_compare_valid),
+    .i_compare_valid(1'b1),
     .o_pwm(w_pwm),
     .o_cycle_end(w_cycle_end)
   );
 
-  reg r_last_phase_31 = 0;
-  always @(posedge i_Clk) begin
-    r_last_phase_31 <= w_phase[31];
-  end
-
   assign io_PMOD_1 = w_pwm;
-  assign io_PMOD_2 = w_phase[31];
+  assign io_PMOD_2 = w_frame_pulse;
   assign io_PMOD_3 = ~w_pwm;
   // assign o_LED_1 = w_pwm;
 

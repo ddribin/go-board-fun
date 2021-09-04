@@ -3,12 +3,29 @@
 module pwm_top (
   input wire  i_Clk,
 
+  input wire  i_Switch_1,
+  input wire  i_Switch_2,
+
   output wire io_PMOD_1,
   output wire io_PMOD_2,
   output wire io_PMOD_3,
   output wire o_LED_1
 );
   
+  wire w_Switch_1;
+  synchronizer switch_1_sync (
+    .i_clk(i_Clk),
+    .i_input(i_Switch_1),
+    .o_input_sync(w_Switch_1)
+  );
+
+  wire w_Switch_2;
+  synchronizer switch_2_sync (
+    .i_clk(i_Clk),
+    .i_input(i_Switch_2),
+    .o_input_sync(w_Switch_2)
+  );
+
   // wire [7:0]  w_top;
   // wire        w_top_valid;
   // wire [8:0]  w_compare;
@@ -37,7 +54,8 @@ module pwm_top (
   );
 
   // Mixer
-  wire [8:0] w_compare = w_compare_pulse_1 + w_compare_pulse_2;
+  wire [8:0] w_compare = (w_Switch_1? 0: w_compare_pulse_1 ) +
+    (w_Switch_2? 0 : w_compare_pulse_2);
   wire w_pwm;
   wire w_cycle_end;
   pwm pwm(

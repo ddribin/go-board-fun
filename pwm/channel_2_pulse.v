@@ -1,6 +1,6 @@
 `default_nettype none
 
-module channel_1_pulse (
+module channel_2_pulse (
   input wire          i_clk,
   output wire [8:0]   o_output,
   output wire         o_frame_pulse
@@ -10,7 +10,7 @@ module channel_1_pulse (
   wire          w_top_valid;
   wire [31:0]   w_phase_delta;
   wire          w_compare_valid = 1;
-  pwm_note_sequencer sequencer(
+  pwm_note_sequencer_2 sequencer(
     .i_clk(i_clk),
     .o_top(w_top),
     .o_top_valid(w_top_valid),
@@ -26,7 +26,7 @@ module channel_1_pulse (
   );
 
   // Generate a pulse wave at 50% duty cycle
-  wire [8:0]  w_compare = (w_phase[31:30] != 2'b11)? 9'd0 : 9'd32;
+  wire [8:0]  w_compare = (w_phase[31:30] == 2'b10)? 9'd0 : 9'd16;
 
   // Generate a sawtooth wave
   // wire [8:0]  w_compare = {1'b0, w_phase[31:24]} >> 2;

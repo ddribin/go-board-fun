@@ -10,6 +10,8 @@ add_file -verilog -lib work "../pwm_note_sequencer.v"
 add_file -verilog -lib work "../note_table.v" 
 add_file -verilog -lib work "../note_length_table.v" 
 add_file -verilog -lib work "../channel_1_pulse.v" 
+add_file -verilog -lib work "../channel_2_pulse.v" 
+add_file -verilog -lib work "../pwm_note_sequencer_2.v" 
 #implementation: "pwm_Implmnt"
 impl -add pwm_Implmnt -type fpga
 

@@ -29,8 +29,15 @@ module pwm_top (
     .o_frame_pulse(w_frame_pulse)
   );
 
+  wire [8:0] w_compare_pulse_2;
+  channel_2_pulse pulse_2(
+    .i_clk(i_Clk),
+    .o_output(w_compare_pulse_2),
+    .o_frame_pulse()
+  );
+
   // Mixer
-  wire [8:0] w_compare = w_compare_pulse_1;
+  wire [8:0] w_compare = w_compare_pulse_1 + w_compare_pulse_2;
   wire w_pwm;
   wire w_cycle_end;
   pwm pwm(

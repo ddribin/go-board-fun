@@ -38,6 +38,7 @@ NOTES = [
   ["Cs6", 1108.731],
 ]
 SAMPLE_HZ = 25_000_000
+BPM = 180
 
 COMMAND = File.basename($0)
 USAGE = "Usage: #{$COMMAND} [defines | table]"
@@ -86,6 +87,23 @@ def print_note_table
   end
 end
 
+def print_duration_table
+  tick_per_sec = 60
+  ticks_per_min = 60*tick_per_sec
+  notes_per_beat = 4
+
+  beats_per_tick = BPM.to_f / ticks_per_min
+  notes_per_tick = notes_per_beat * beats_per_tick
+  ticks_per_note = 1/ notes_per_tick
+  sec_per_note = ticks_per_note / tick_per_sec
+  clocks_per_note = SAMPLE_HZ * sec_per_note
+
+  (1..32).each_with_index do |note_len, index|
+    duration = (note_len * clocks_per_note).round
+    printf "      5'd%02d: r_duration = 32'd%d;\n", index, duration
+  end
+end
+
 if ARGV.length != 1
   $stderr.puts USAGE
   return 1
@@ -98,6 +116,8 @@ when "defines"
   print_note_defines
 when "table"
   print_note_table
+when "duration"
+  print_duration_table
 else
   $stderr.puts USAGE
   return 1

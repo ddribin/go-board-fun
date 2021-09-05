@@ -4,7 +4,7 @@ Version=Lattice Semiconductor Corporation iCEcube - Release: 2020.12.27943 - Bui
 ProjectName=pwm
 Vendor=SiliconBlue
 Synthesis=synplify
-ProjectVFiles=../pwm.v=work,../pwm_sequencer.v=work,../pwm_top.v=work,../phase_generator.v=work,../pwm_note_sequencer.v=work,../note_table.v,../note_length_table.v,../channel_1_pulse.v,../channel_2_pulse.v,../pwm_note_sequencer_2.v,../synchronizer.v
+ProjectVFiles=../pwm.v=work,../pwm_sequencer.v=work,../pwm_top.v=work,../phase_generator.v=work,../pwm_note_sequencer.v=work,../note_table.v,../note_length_table.v,../channel_1_pulse.v,../channel_2_pulse.v,../pwm_note_sequencer_2.v,../synchronizer.v,../channel_3_note_sequencer.v,../channel_3_triangle.v
 ProjectCFiles=
 CurImplementation=pwm_Implmnt
 Implementations=pwm_Implmnt

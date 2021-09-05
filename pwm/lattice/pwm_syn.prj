@@ -13,6 +13,8 @@ add_file -verilog -lib work "../channel_1_pulse.v"
 add_file -verilog -lib work "../channel_2_pulse.v" 
 add_file -verilog -lib work "../pwm_note_sequencer_2.v" 
 add_file -verilog -lib work "../synchronizer.v" 
+add_file -verilog -lib work "../channel_3_note_sequencer.v" 
+add_file -verilog -lib work "../channel_3_triangle.v" 
 #implementation: "pwm_Implmnt"
 impl -add pwm_Implmnt -type fpga
 

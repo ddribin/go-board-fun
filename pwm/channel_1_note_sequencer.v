@@ -1,7 +1,7 @@
 `default_nettype none
 `include "note_table.vh"
 
-module pwm_note_sequencer (
+module channel_1_note_sequencer (
   input wire          i_clk,
 
   output wire [7:0]   o_top,

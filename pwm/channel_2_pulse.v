@@ -11,7 +11,7 @@ module channel_2_pulse (
   wire [31:0]   w_phase_delta;
   wire          w_compare_valid = 1;
   wire [8:0]    w_envelope;
-  pwm_note_sequencer_2 sequencer(
+  channel_2_note_sequencer sequencer(
     .i_clk(i_clk),
     .o_top(w_top),
     .o_top_valid(w_top_valid),
@@ -27,15 +27,8 @@ module channel_2_pulse (
     .o_phase(w_phase)
   );
 
-  // Generate a pulse wave at 50% duty cycle
-  wire [8:0]  w_compare = (w_phase[31:30] == 2'b10)? w_envelope: 9'd0;
-
-  // Generate a sawtooth wave
-  // wire [8:0]  w_compare = {1'b0, w_phase[31:24]} >> 2;
-
-  // Generate a sine wave
-  // wire [8:0]  w_compare;
-  // sine_generator sine_generator(.i_phase(w_phase), .o_compare(w_compare));
+  // Generate a pulse wave at 25% duty cycle
+  wire [8:0]  w_compare = (w_phase[31:30] == 2'b11)? w_envelope: 9'd0;
 
   assign o_output = w_compare;
   assign o_frame_pulse = w_phase[31];

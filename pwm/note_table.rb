@@ -12,6 +12,7 @@ NOTES = [
   ["D3",  146.8324],
   ["E3",  164.8138],
   ["F3",  174.6141],
+  ["Fs3", 184.9972],
   ["G3",  195.9977],
   ["A3",  220.0000],
   ["B3",  246.9417],
@@ -35,13 +36,31 @@ NOTES = [
   ["As5", 932.3275],
   ["B5",  987.7666],
   [],
+  ["C6",  1046.502],
   ["Cs6", 1108.731],
+  ["Fs6", 1479.978],
+  ["Gs6", 1661.219],
+  ["A6",  1760.000],
+  ["As6", 1864.655],
+  ["B6",  1975.533],
+  [],
+  ["Cs7", 2217.461 ],
 ]
 SAMPLE_HZ = 25_000_000
 BPM = 180
 
 COMMAND = File.basename($0)
 USAGE = "Usage: #{$COMMAND} [defines | table]"
+
+def adjust_octave(name)
+  if name =~ /(\S+)(\d+)/
+    base_name = $1
+    octave = $2.to_i - 1
+    # puts "#{base_name} -> #{octave}"
+    name = "#{base_name}#{octave}"
+  end
+  return name
+end
 
 def print_note_defines
   puts '`ifndef NOTE_TABLE_VH'
@@ -55,7 +74,7 @@ def print_note_defines
       next
     end
   
-    name = note[0]
+    name = adjust_octave(note[0])
     freq_hz = note[1]
     printf "`define NOTE_%-3s  6'd%-3d  // %11.5f Hz\n", name, i, freq_hz
     i += 1

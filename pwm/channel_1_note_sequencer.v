@@ -58,10 +58,12 @@ module channel_1_note_sequencer (
       4'd10: begin r_note = `NOTE_Cs6; r_note_len = note_len(12); end
       4'd11: begin r_note = `NOTE_Fs5; r_note_len = note_len(12); end
       4'd12: begin r_note = `NOTE_Fs6; r_note_len = note_len(30); end
+
       4'd13: begin r_note = `NOTE_Gs6; r_note_len = note_len(4); end
       4'd14: begin r_note = `NOTE_Fs6; r_note_len = note_len(2); end
+
       4'd15: begin r_note = `NOTE_Cs7; r_note_len = note_len(30); end
-      // 4'd15: begin r_note = `NOTE_RST; r_note_len = note_len(4); end
+
       default: begin r_note = `NOTE_RST;   r_note_len = note_len(4); end
     endcase
   end

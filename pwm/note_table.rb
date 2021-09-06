@@ -85,9 +85,10 @@ def print_note_table
       next
     end
 
+    name = note[0]
     freq_hz = note[1]
     count = (freq_hz * 2**32 / SAMPLE_HZ).round
-    printf "%08X  // %11.5f Hz\n", count, freq_hz
+    printf "%08X  // %-3s %11.5f Hz\n", count, name, freq_hz
     i += 1
   end
 

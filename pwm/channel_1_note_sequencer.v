@@ -110,9 +110,48 @@ module channel_1_note_sequencer (
       default: r_envelope = 0;
     endcase
   end
-    assign o_top = 8'hff;
+
+  assign o_top = 8'hff;
   assign o_top_valid = 1;
-  note_table note_table(.i_note(r_note), .o_compare(o_phase_delta));
+  wire [31:0] w_phase_delta;
+  note_table note_table(.i_note(r_note), .o_compare(w_phase_delta));
   assign o_envelope = r_envelope;
+
+  reg [18:0] r_vibrato_counter = 0;
+  reg [2:0] r_vibrato_index = 0;
+  always @(posedge i_clk) begin
+    if (r_new_note) begin
+      r_vibrato_counter <= 0;
+      r_vibrato_index <= 0;
+    end else if (r_vibrato_counter == CLOCKS_PER_TICK) begin
+      r_vibrato_counter <= 0;
+      if (r_vibrato_index == 3'd07) begin
+        r_vibrato_index <= 0;
+      end else begin
+        r_vibrato_index <= r_vibrato_index + 1;
+      end
+    end else begin
+      r_vibrato_counter <= r_vibrato_counter + 1;
+    end
+  end
+
+  reg [31:0] r_vibrato_adjust = 0;
+  localparam VIBRATO_DEPTH = 32'h200;
+  always @(*) begin
+    case (r_vibrato_index)
+      3'd00: r_vibrato_adjust = 0;
+      3'd01: r_vibrato_adjust = -32'h71B;
+      3'd02: r_vibrato_adjust = -32'hAFA;
+      3'd03: r_vibrato_adjust = -32'h71B;
+      3'd04: r_vibrato_adjust = 0;
+      3'd05: r_vibrato_adjust = 32'h79E;
+      3'd06: r_vibrato_adjust = 32'hB1F;
+      3'd07: r_vibrato_adjust = 32'h79E;
+
+      default: r_vibrato_adjust = 0;
+    endcase
+  end
+  
+  assign o_phase_delta = w_phase_delta + r_vibrato_adjust;
 
 endmodule

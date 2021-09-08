@@ -2,6 +2,7 @@
 
 module channel_1_pulse (
   input wire          i_clk,
+  output wire         o_debug,
   output wire [8:0]   o_output,
   output wire         o_frame_pulse
 );
@@ -14,6 +15,7 @@ module channel_1_pulse (
   channel_1_note_sequencer sequencer(
     .i_clk(i_clk),
     .o_top(w_top),
+    .o_debug(o_debug),
     .o_top_valid(w_top_valid),
     .o_phase_delta(w_phase_delta),
     .o_envelope(w_envelope)

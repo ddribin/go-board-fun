@@ -48,10 +48,12 @@ module pwm_top (
 
   wire [8:0] w_compare_pulse_1;
   wire w_frame_pulse;
+  wire w_debug_1;
   channel_1_pulse pulse_1(
     .i_clk(i_Clk),
+    .o_debug(w_debug_1),
     .o_output(w_compare_pulse_1),
-    .o_frame_pulse()
+    .o_frame_pulse(w_frame_pulse)
   );
 
   wire [8:0] w_compare_pulse_2;
@@ -65,14 +67,14 @@ module pwm_top (
   channel_3_triangle triangle_3(
     .i_clk(i_Clk),
     .o_output(w_triangle_3_output),
-    .o_frame_pulse(w_frame_pulse)
+    .o_frame_pulse()
   );
 
   // Mixer
   wire [8:0] w_compare =
-    (w_Switch_1? 0 : w_compare_pulse_1 ) +
-    (w_Switch_2? 0 : w_compare_pulse_2) +
-    (w_Switch_3? 0 : w_triangle_3_output)
+    (w_Switch_1? 0 : w_compare_pulse_1 )
+    + (w_Switch_2? 0 : w_compare_pulse_2)
+    + (w_Switch_3? 0 : w_triangle_3_output)
     ;
   wire w_pwm;
   wire w_cycle_end;

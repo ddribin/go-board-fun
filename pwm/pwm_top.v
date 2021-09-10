@@ -12,6 +12,7 @@ module pwm_top (
   output wire io_PMOD_3,
   output wire o_LED_1
 );
+  wire i_clk = i_Clk;
   
   wire w_Switch_1;
   synchronizer switch_1_sync (
@@ -46,12 +47,20 @@ module pwm_top (
   //   .o_compare_valid(w_compare_valid)
   // );
 
+  wire w_tick_stb;
+  wire w_beat_stb;
+  timing_strobe_generator pulse_generator (
+    .i_clk(i_clk),
+    .o_tick_stb(w_tick_stb),
+    .o_beat_stb(w_beat_stb)
+  );
+  
   wire [8:0] w_compare_pulse_1;
   wire w_frame_pulse;
-  wire w_debug_1;
   channel_1_pulse pulse_1(
     .i_clk(i_Clk),
-    .o_debug(w_debug_1),
+    .i_tick_stb(w_tick_stb),
+    .i_note_stb(w_beat_stb),
     .o_output(w_compare_pulse_1),
     .o_frame_pulse(w_frame_pulse)
   );
@@ -59,6 +68,8 @@ module pwm_top (
   wire [8:0] w_compare_pulse_2;
   channel_2_pulse pulse_2(
     .i_clk(i_Clk),
+    .i_tick_stb(w_tick_stb),
+    .i_note_stb(w_beat_stb),
     .o_output(w_compare_pulse_2),
     .o_frame_pulse()
   );
@@ -66,6 +77,8 @@ module pwm_top (
   wire [8:0] w_triangle_3_output;
   channel_3_triangle triangle_3(
     .i_clk(i_Clk),
+    .i_tick_stb(w_tick_stb),
+    .i_note_stb(w_beat_stb),
     .o_output(w_triangle_3_output),
     .o_frame_pulse()
   );

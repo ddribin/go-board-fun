@@ -3,8 +3,9 @@
 
 module channel_1_note_sequencer (
   input wire          i_clk,
+  input wire          i_tick_stb,
+  input wire          i_note_stb,
 
-  output wire         o_debug,
   output wire [7:0]   o_top,
   output wire         o_top_valid,
   output wire [31:0]  o_phase_delta,
@@ -13,61 +14,29 @@ module channel_1_note_sequencer (
 
   `include "note_length_table.vh"
 
-  localparam CLOCKS_PER_TICK = 415_667; // 60Hz
-  localparam TICK_WIDTH = $clog2(CLOCKS_PER_TICK);
-  reg   [TICK_WIDTH-1:0]  r_tick_counter = 0;
-  reg                     r_tick_pulse = 0;
-  always @(posedge i_clk) begin
-    if (r_tick_counter == CLOCKS_PER_TICK-1) begin
-      r_tick_counter <= 0;
-      r_tick_pulse <= 1;
-    end else begin
-      r_tick_counter <= r_tick_counter + 1;
-      r_tick_pulse <= 0;
-    end
-  end
-
-  localparam  TICKS_PER_NOTE = 5;
-  localparam  NOTE_WIDTH = $clog2(TICKS_PER_NOTE);
-  reg   [NOTE_WIDTH-1:0]  r_note_counter = 0;
-  reg                     r_note_count = 0;
-  reg                     r_last_note_count = 0;
-  always @(posedge i_clk) begin
-    if (r_tick_pulse) begin
-      if (r_note_counter == TICKS_PER_NOTE-1) begin
-        r_note_counter <= 0;
-        r_note_count <= ~r_note_count;
-      end else begin
-        r_note_counter <= r_note_counter + 1;
-      end
-    end
-    r_last_note_count <= r_note_count;
-  end
-  wire r_note_pulse = r_note_count != r_last_note_count;
-  assign o_debug = r_tick_pulse;
-
   reg [4:0] r_duration_count = 0;
   reg [3:0] r_note_index = 0;
 
   reg [5:0]  r_note = 0;
   reg [4:0]  r_note_len = 0;
-  reg        r_new_note = 0;
+  // reg      r_new_note = 0;
 
   always @(posedge i_clk) begin
-    if (r_note_pulse) begin
+    if (i_note_stb) begin
       if (r_duration_count == r_note_len) begin
         r_duration_count <= 0;
         r_note_index <= r_note_index + 1;
         if (r_note_index == 4'd15) begin
           r_note_index <= 0;
         end
-        r_new_note <= 1;
+        // r_new_note <= 1;
       end else begin
         r_duration_count <= r_duration_count + 1;
-        r_new_note <= 0;
+        // r_new_note <= 0;
       end
     end
   end
+  wire r_new_note = i_note_stb & (r_duration_count == r_note_len);
 
   always @(*) begin
     case (r_note_index)
@@ -102,7 +71,7 @@ module channel_1_note_sequencer (
   always @(posedge i_clk) begin
     if (r_new_note) begin
       r_envelope_index <= 0;
-    end else if (r_tick_pulse) begin
+    end else if (i_tick_stb) begin
       if (r_envelope_index == 4'd15) begin
         r_envelope_index <= 4'd15;
       end else begin
@@ -145,7 +114,7 @@ module channel_1_note_sequencer (
   always @(posedge i_clk) begin
     if (r_new_note) begin
       r_vibrato_index <= 0;
-    end else if (r_tick_pulse) begin
+    end else if (i_tick_stb) begin
       if (r_vibrato_index == 3'd07) begin
         r_vibrato_index <= 0;
       end else begin

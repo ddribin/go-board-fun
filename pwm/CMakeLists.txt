@@ -6,6 +6,7 @@ target_compile_features(${LIB_TARGET_NAME} PUBLIC cxx_std_11)
 
 verilate(${LIB_TARGET_NAME} SOURCES pwm_tb.v TRACE)
 verilate(${LIB_TARGET_NAME} SOURCES pwm_top.v)
+verilate(${LIB_TARGET_NAME} SOURCES timing_strobe_generator.v)
 
 include(Catch)
 

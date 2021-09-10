@@ -3,6 +3,8 @@
 
 module channel_2_note_sequencer (
   input wire          i_clk,
+  input wire          i_tick_stb,
+  input wire          i_note_stb,
 
   output wire [7:0]   o_top,
   output wire         o_top_valid,
@@ -12,33 +14,29 @@ module channel_2_note_sequencer (
 
   `include "note_length_table.vh"
 
-  reg   [4:0]   r_note_len = 0;
-  wire  [31:0]  r_note_duration;
-  note_length_table length_table(
-    .i_note_len(r_note_len),
-    .o_duration(r_note_duration)
-  );
-
-  reg [31:0] r_duration_count = 0;
+  reg [4:0] r_duration_count = 0;
   reg [3:0] r_note_index = 0;
 
   reg [5:0]  r_note = 0;
-  wire r_note_done = r_duration_count == r_note_duration;
-  reg r_new_note = 0;
+  reg [4:0]  r_note_len = 0;
+  // reg        r_new_note = 0;
 
   always @(posedge i_clk) begin
-    if (r_note_done) begin
-      r_duration_count <= 0;
-      r_note_index <= r_note_index + 1;
-      if (r_note_index == 4'd14) begin
-        r_note_index <= 0;
+    if (i_note_stb) begin
+      if (r_duration_count == r_note_len) begin
+        r_duration_count <= 0;
+        r_note_index <= r_note_index + 1;
+        if (r_note_index == 4'd14) begin
+          r_note_index <= 0;
+        end
+        // r_new_note <= 1;
+      end else begin
+        r_duration_count <= r_duration_count + 1;
+        // r_new_note <= 0;
       end
-      r_new_note <= 1;
-    end else begin
-      r_duration_count <= r_duration_count + 1;
-      r_new_note <= 0;
     end
   end
+  wire r_new_note = i_note_stb & (r_duration_count == r_note_len);
 
   always @(*) begin
     case (r_note_index)
@@ -65,20 +63,15 @@ module channel_2_note_sequencer (
 
   reg [18:0] r_envelope_counter = 0;
   reg [3:0] r_envelope_index = 0;
-  localparam CLOCKS_PER_TICK = 415_667;
   always @(posedge i_clk) begin
     if (r_new_note) begin
-      r_envelope_counter <= 0;
       r_envelope_index <= 0;
-    end else if (r_envelope_counter == CLOCKS_PER_TICK) begin
-      r_envelope_counter <= 0;
+    end else if (i_tick_stb) begin
       if (r_envelope_index == 4'd8) begin
         r_envelope_index <= 4'd8;
       end else begin
         r_envelope_index <= r_envelope_index + 1;
       end
-    end else begin
-      r_envelope_counter <= r_envelope_counter + 1;
     end
   end
 

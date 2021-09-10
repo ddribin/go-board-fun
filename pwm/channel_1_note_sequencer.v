@@ -110,15 +110,55 @@ module channel_1_note_sequencer (
   note_table note_table(.i_note(r_note), .o_compare(w_phase_delta));
   assign o_envelope = r_envelope;
 
-  reg [2:0] r_vibrato_index = 0;
+  reg       r_vibrato_en = 0;
+  reg [4:0] r_vibrato_len = 0;
+  reg [4:0] r_vibrato_len_count = 0;
+  reg [3:0] r_vibrato_index = 0;
+
   always @(posedge i_clk) begin
-    if (r_new_note) begin
-      r_vibrato_index <= 0;
-    end else if (i_tick_stb) begin
-      if (r_vibrato_index == 3'd07) begin
-        r_vibrato_index <= 0;
-      end else begin
+    if (i_note_stb) begin
+      if (r_vibrato_len_count == r_vibrato_len) begin
+        r_vibrato_len_count <= 0;
         r_vibrato_index <= r_vibrato_index + 1;
+        if (r_vibrato_index == 4'd09) begin
+          r_vibrato_index <= 0;
+        end
+      end else begin
+        r_vibrato_len_count <= r_vibrato_len_count + 1;
+      end
+    end
+  end
+  wire r_new_vibrato = i_note_stb & (r_vibrato_len_count == r_vibrato_len);
+
+  always @(*) begin
+    case (r_vibrato_index)
+      4'd00: begin r_vibrato_en = 0;  r_vibrato_len = note_len(30); end
+
+      4'd01: begin r_vibrato_en = 0;  r_vibrato_len = note_len(7); end
+      4'd02: begin r_vibrato_en = 1;  r_vibrato_len = note_len(11); end
+      4'd03: begin r_vibrato_en = 0;  r_vibrato_len = note_len(12); end
+
+      4'd04: begin r_vibrato_en = 0;  r_vibrato_len = note_len(13); end
+      4'd05: begin r_vibrato_en = 1;  r_vibrato_len = note_len(9); end
+      4'd06: begin r_vibrato_en = 0;  r_vibrato_len = note_len(8); end
+
+      4'd07: begin r_vibrato_en = 0;  r_vibrato_len = note_len(30); end
+      4'd08: begin r_vibrato_en = 0;  r_vibrato_len = note_len(30); end
+      4'd09: begin r_vibrato_en = 0;  r_vibrato_len = note_len(30); end
+
+      default: begin r_vibrato_en = 0;  r_vibrato_len = note_len(30); end
+    endcase
+  end
+
+  reg [2:0] r_vibrato_adjust_index = 0;
+  always @(posedge i_clk) begin
+    if (r_new_vibrato) begin
+      r_vibrato_adjust_index <= 0;
+    end else if (i_tick_stb) begin
+      if (r_vibrato_adjust_index == 3'd07) begin
+        r_vibrato_adjust_index <= 0;
+      end else begin
+        r_vibrato_adjust_index <= r_vibrato_adjust_index + 1;
       end
     end
   end
@@ -126,7 +166,7 @@ module channel_1_note_sequencer (
   reg [31:0] r_vibrato_adjust = 0;
   localparam VIBRATO_DEPTH = 32'h200;
   always @(*) begin
-    case (r_vibrato_index)
+    case (r_vibrato_adjust_index)
       3'd00: r_vibrato_adjust = 0;
       3'd01: r_vibrato_adjust = -32'h71B;
       3'd02: r_vibrato_adjust = -32'hAFA;
@@ -140,6 +180,6 @@ module channel_1_note_sequencer (
     endcase
   end
   
-  assign o_phase_delta = w_phase_delta /*+ r_vibrato_adjust*/;
+  assign o_phase_delta = w_phase_delta + (r_vibrato_en ? r_vibrato_adjust : 32'd0);
 
 endmodule

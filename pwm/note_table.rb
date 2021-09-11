@@ -79,6 +79,11 @@ def print_note_defines
   puts '`endif'
 end
 
+def freq_to_count(freq_hz)
+  count = (freq_hz * 2**32 / SAMPLE_HZ).round
+  return count
+end
+
 def print_note_table
   i = 0
   NOTES.each do |note|
@@ -89,7 +94,7 @@ def print_note_table
 
     name = note[0]
     freq_hz = note[1]
-    count = (freq_hz * 2**32 / SAMPLE_HZ).round
+    count = freq_to_count(count)
     printf "%08X  // %-3s %11.5f Hz\n", count, name, freq_hz
     i += 1
   end
@@ -119,7 +124,59 @@ def print_duration_table
   end
 end
 
-if ARGV.length != 1
+
+# t = fCPU/(16*fpulse) - 1
+# fpulse = fCPU/(16*(t+1))
+FAMI_CPU_HZ = 1.789773 * 10**6 # 1.789773 MHz
+def freq_to_famicount(freq_hz)
+  famicount = FAMI_CPU_HZ/(16.0*freq_hz) - 1
+  return famicount.round
+end
+
+def famicount_to_freq(famicount)
+  freq_hz = FAMI_CPU_HZ/(16*(famicount + 1))
+end
+
+def notes_by_name
+  hash = {}
+  NOTES.each do |note|
+    next if note.count == 0
+    hash[note[0]] = note[1]
+  end
+  return hash
+end
+
+VIBRATO_SPEED = [0, 64, 32, 21, 16, 13, 11, 9, 8, 7, 6, 5, 4]
+VIBRATO_DEPTH = [
+  0x01, 0x03, 0x05, 0x07, 0x09, 0x0D, 0x13, 0x17,
+  0x1B, 0x21, 0x2B, 0x3 , 0x57, 0x7F, 0xBf, 0xFF]
+
+def print_vibrato(speed, depth, note_name)
+  puts "note: #{note_name} speed: #{speed} depth: #{depth}"
+
+  notes = notes_by_name
+  base_freq = notes[note_name]
+  base_count = freq_to_count(base_freq)
+  base_famicount = freq_to_famicount(base_freq)
+  length = VIBRATO_SPEED[speed]
+
+  printf "base_freq: #{base_freq} base_count: 0x%05X, base_famicount: 0x%03X\n",
+    base_count, base_famicount
+  puts "length: #{length}"
+  (0...length).each do |i|
+    value =
+      (Math.sin(i* 2.0 * Math::PI / length) *
+      (VIBRATO_DEPTH[depth] / 2.0)).round
+    famicount = base_famicount + value
+    freq = famicount_to_freq(famicount)
+    count = base_count - freq_to_count(freq)
+    count_sign = "  -"[count <=> 0]
+    printf "#{i} = #{value} [0x%03X, %f, %s32'h%04X]\n",
+      famicount, freq, count_sign, count.abs
+  end
+end
+
+if ARGV.length == 0
   $stderr.puts USAGE
   return 1
 end
@@ -133,6 +190,8 @@ when "table"
   print_note_table
 when "duration"
   print_duration_table
+when "vibrato"
+  print_vibrato(ARGV[1].to_i, ARGV[2].to_i, ARGV[3])
 else
   $stderr.puts USAGE
   return 1

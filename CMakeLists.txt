@@ -12,3 +12,5 @@ add_subdirectory(verilatest)
 
 add_subdirectory(nes-controller)
 add_subdirectory(pwm)
+add_subdirectory(hdlbits)
+

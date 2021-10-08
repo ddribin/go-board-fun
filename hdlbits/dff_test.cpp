@@ -1,12 +1,11 @@
 #include "test-common.hpp"
 #include "Vdff.h"
 
-struct Vdff_adapter : public Vdff
-{
-    void setClock(uint64_t clock) { clk = clock; }
-};
+void setClock(Vdff& core, uint8_t clock) {
+    core.clk = clock;
+}
 
-using UUT = Vdff_adapter;
+using UUT = Vdff;
 
 struct DffFixture : TestFixture<UUT> {
     Input8 d;

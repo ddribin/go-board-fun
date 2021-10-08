@@ -6,6 +6,9 @@ target_compile_features(${LIB_TARGET_NAME} PUBLIC cxx_std_11)
 
 verilate(${LIB_TARGET_NAME} SOURCES dff.v TRACE)
 
+add_executable(dff_main dff_main.cpp)
+verilate(dff_main SOURCES dff.v TRACE)
+
 include(Catch)
 
 set(TEST_TARGET_NAME ${BASE_NAME}-tests)

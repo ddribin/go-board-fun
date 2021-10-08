@@ -1,12 +1,16 @@
 #include "test-common.hpp"
 #include "Vnes_controller_tb.h"
 
+void setClock(Vnes_controller_tb& core, uint8_t clock) {
+    core.clk = clock;
+}
+
 struct Vnes_controller_adapter : public Vnes_controller_tb
 {
     void setClock(uint64_t clock) { clk = clock; }
 };
 
-using UUT = Vnes_controller_adapter;
+using UUT = Vnes_controller_tb;
 
 struct NesControllerFixture : TestFixture<UUT> {
     Input8 readButtons, controllerData;

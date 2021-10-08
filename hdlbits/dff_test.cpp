@@ -14,6 +14,7 @@ struct DffFixture : TestFixture<UUT> {
         d(makeInput(&UUT::d)),
         q(makeOutput(&UUT::q))
     {
+        bench.openTrace(vcdNameForCurrentTest().c_str());
     }
 };
 
@@ -21,7 +22,7 @@ using Fixture = DffFixture;
 
 TEST_CASE_METHOD(Fixture, "dff: Test", "[hdlbits]")
 {
-    bench.openTrace("/tmp/dff.vcd");
+    // bench.openTrace("/tmp/dff.vcd");
     d.addInputs({
         {2, 1}, {5, 0}, {7, 1}
     });

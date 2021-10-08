@@ -23,4 +23,4 @@ target_include_directories(${TEST_TARGET_NAME} PRIVATE ../common)
 target_link_libraries(${TEST_TARGET_NAME} PRIVATE
     ${LIB_TARGET_NAME} Catch2::Catch2)
 target_compile_definitions(${TEST_TARGET_NAME} PRIVATE VERILATEST_TRACE=1)
-# catch_discover_tests(${TEST_TARGET_NAME})
+catch_discover_tests(${TEST_TARGET_NAME})

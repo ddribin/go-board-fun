@@ -23,6 +23,7 @@ struct PwmFixture : TestFixture<UUT>
                    compareValid(makeInput(&UUT::i_compare_valid)),
                    pwm(makeOutput(&UUT::o_pwm))
     {
+        bench.openTrace(vcdNameForCurrentTest().c_str());
     }
 
     void setupTop(uint8_t top_, uint64_t time_ = 1)
@@ -40,21 +41,19 @@ struct PwmFixture : TestFixture<UUT>
 
 using Fixture = PwmFixture;
 
-TEST_CASE_METHOD(Fixture, "Initial state", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Initial state", "[pwm]")
 {
     REQUIRE(core.o_pwm == 0);
 }
 
-TEST_CASE_METHOD(Fixture, "Test no compare set", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test no compare set", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_unintialized.vcd");
     bench.tick(32);
     CHECK(pwm.changes() == ChangeVector8());
 }
 
-TEST_CASE_METHOD(Fixture, "Test 0/16", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 0/16", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_0_of_16.vcd");
     setupTop(15);
     setupCompare(0);
 
@@ -62,13 +61,12 @@ TEST_CASE_METHOD(Fixture, "Test 0/16", "[pwm]")
     CHECK(pwm.changes() == ChangeVector8());
 }
 
-TEST_CASE_METHOD(Fixture, "Test 1/16", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 1/16", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_1_of_16.vcd");
     setupTop(15);
     setupCompare(1);
 
-    bench.tick(35);
+    bench.tick(40);
     CHECK(pwm.changes() == ChangeVector8({
         {2,  1}, {3,  0},
         {18, 1}, {19, 0},
@@ -76,13 +74,12 @@ TEST_CASE_METHOD(Fixture, "Test 1/16", "[pwm]")
     }));
 }
 
-TEST_CASE_METHOD(Fixture, "Test 15/16", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 15/16", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_15_of_16.vcd");
     setupTop(15);
     setupCompare(15);
 
-    bench.tick(35);
+    bench.tick(40);
     CHECK(pwm.changes() == ChangeVector8({
         {2,  1}, {17, 0},
         {18, 1}, {33, 0},
@@ -90,9 +87,8 @@ TEST_CASE_METHOD(Fixture, "Test 15/16", "[pwm]")
     }));
 }
 
-TEST_CASE_METHOD(Fixture, "Test 16/16", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 16/16", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_16_of_16.vcd");
     setupTop(15);
     setupCompare(16);
 
@@ -104,9 +100,8 @@ TEST_CASE_METHOD(Fixture, "Test 16/16", "[pwm]")
 
 // ---
 
-TEST_CASE_METHOD(Fixture, "Test 0/8", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 0/8", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_0_of_8.vcd");
     setupTop(7);
     setupCompare(0);
 
@@ -114,9 +109,8 @@ TEST_CASE_METHOD(Fixture, "Test 0/8", "[pwm]")
     CHECK(pwm.changes() == ChangeVector8());
 }
 
-TEST_CASE_METHOD(Fixture, "Test 4/8", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 4/8", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_4_of_8.vcd");
     setupTop(7);
     setupCompare(4);
 
@@ -128,9 +122,8 @@ TEST_CASE_METHOD(Fixture, "Test 4/8", "[pwm]")
     }));
 }
 
-TEST_CASE_METHOD(Fixture, "Test 8/8", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test 8/8", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_8_of_8.vcd");
     setupTop(7);
     setupCompare(8);
 
@@ -142,9 +135,8 @@ TEST_CASE_METHOD(Fixture, "Test 8/8", "[pwm]")
 
 // ---
 
-TEST_CASE_METHOD(Fixture, "Test updating compare up while running", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test updating compare up while running", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_update_compare_up.vcd");
     setupTop(15);
     setupCompare(1);
     setupCompare(4, 5); // 5 is the middle of the first cycle
@@ -157,9 +149,8 @@ TEST_CASE_METHOD(Fixture, "Test updating compare up while running", "[pwm]")
     }));
 }
 
-TEST_CASE_METHOD(Fixture, "Test updating compare down while running", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PMW: Test updating compare down while running", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_update_compare_down.vcd");
     setupTop(15);
     setupCompare(4);
     setupCompare(1, 5); // 5 is the middle of the first high cycle
@@ -172,9 +163,8 @@ TEST_CASE_METHOD(Fixture, "Test updating compare down while running", "[pwm]")
     }));
 }
 
-TEST_CASE_METHOD(Fixture, "Test updating compare on last clock of first cycle", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test updating compare on last clock of first cycle", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_update_compare_down_last.vcd");
     setupTop(15);
     setupCompare(4);
     setupCompare(1, 17); // 17 is the last clock of the first cycle
@@ -187,9 +177,8 @@ TEST_CASE_METHOD(Fixture, "Test updating compare on last clock of first cycle", 
     }));
 }
 
-TEST_CASE_METHOD(Fixture, "Test updating compare on first clock of second cycle", "[pwm]")
+TEST_CASE_METHOD(Fixture, "PWM: Test updating compare on first clock of second cycle", "[pwm]")
 {
-    bench.openTrace("/tmp/pwm_update_compare_down_first.vcd");
     setupTop(15);
     setupCompare(4);
     setupCompare(1, 18); // 18 is the first clock of the second cycle

@@ -19,7 +19,6 @@ struct NesControllerFixture : TestFixture<UUT> {
         buttonsValid(makeOutput(&UUT::o_valid)),
         buttons(makeOutput(&UUT::o_buttons))
     {
-        bench.openTrace(vcdNameForCurrentTest().c_str());
     }
 };
 

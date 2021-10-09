@@ -18,7 +18,6 @@ struct PwmFixture : TestFixture<UUT>
                    compareValid(makeInput(&UUT::i_compare_valid)),
                    pwm(makeOutput(&UUT::o_pwm))
     {
-        bench.openTrace(vcdNameForCurrentTest().c_str());
     }
 
     void setupTop(uint8_t top_, uint64_t time_ = 1)

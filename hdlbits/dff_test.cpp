@@ -14,7 +14,6 @@ struct DffFixture : TestFixture<UUT> {
         d(makeInput(&UUT::d)),
         q(makeOutput(&UUT::q))
     {
-        bench.openTrace(vcdNameForCurrentTest().c_str());
     }
 };
 

@@ -4,7 +4,8 @@ set(LIB_TARGET_NAME ${BASE_NAME}-library)
 add_library(${LIB_TARGET_NAME} STATIC)
 target_compile_features(${LIB_TARGET_NAME} PUBLIC cxx_std_11)
 
-verilate(${LIB_TARGET_NAME} SOURCES nes_controller_tb.v TRACE)
+verilate(${LIB_TARGET_NAME} SOURCES nes_controller.v TRACE
+    VERILATOR_ARGS -GCYCLES_PER_PULSE=5)
 verilate(${LIB_TARGET_NAME} SOURCES nes_controller_top.v)
 
 include(Catch)

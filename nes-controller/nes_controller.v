@@ -25,6 +25,11 @@ module nes_controller #(
   localparam CYCLES_PER_BIT = CYCLES_PER_PULSE*2;
   localparam CYCLES_PER_READ_BIT = CYCLES_PER_PULSE + (CYCLES_PER_PULSE)/2;
 
+  // Properly sized parameters for Verilator, which is very pedantic on widths
+  localparam CYCLES_PER_PULSE_ = CYCLES_PER_PULSE[COUNT_WIDTH-1:0];
+  localparam CYCLES_PER_BIT_ = CYCLES_PER_BIT[COUNT_WIDTH-1:0];
+  localparam CYCLES_PER_READ_BIT_ = CYCLES_PER_READ_BIT[COUNT_WIDTH-1:0];
+
   reg [2:0]     r_state = STATE_IDLE;
   reg [COUNT_WIDTH-1:0] r_count = 0;
   reg [2:0]     r_button_count;
@@ -44,15 +49,15 @@ module nes_controller #(
       end
 
       STATE_BUTTON_A : begin
-        if (r_count == CYCLES_PER_BIT-1) begin
+        if (r_count == CYCLES_PER_BIT_-1) begin
           r_state <= STATE_OTHER_BUTTONS;
           r_count <= 0;
           r_button_count <= 0;
           o_controller_clock <= 0;
         end else begin
-          if (r_count == CYCLES_PER_PULSE-1) begin
+          if (r_count == CYCLES_PER_PULSE_-1) begin
             o_controller_latch <= 0;
-          end else if (r_count == CYCLES_PER_READ_BIT-1) begin
+          end else if (r_count == CYCLES_PER_READ_BIT_-1) begin
             o_buttons <= {o_buttons[6:0], !i_controller_data};
           end
           r_count <= r_count + 1;
@@ -60,7 +65,7 @@ module nes_controller #(
       end
 
       STATE_OTHER_BUTTONS : begin
-        if (r_count == CYCLES_PER_BIT-1) begin
+        if (r_count == CYCLES_PER_BIT_-1) begin
           if (r_button_count == 6) begin
             r_state <= STATE_VALID;
             o_valid <= 1;
@@ -70,9 +75,9 @@ module nes_controller #(
             o_controller_clock <= 0;
           end
         end else begin
-          if (r_count == CYCLES_PER_PULSE-1) begin
+          if (r_count == CYCLES_PER_PULSE_-1) begin
             o_controller_clock <= 1;
-          end else if (r_count == CYCLES_PER_READ_BIT-1) begin
+          end else if (r_count == CYCLES_PER_READ_BIT_-1) begin
             o_buttons <= {o_buttons[6:0], !i_controller_data};
           end
          r_count <= r_count + 1;

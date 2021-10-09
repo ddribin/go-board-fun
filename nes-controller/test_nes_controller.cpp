@@ -5,11 +5,6 @@ void setClock(Vnes_controller_tb& core, uint8_t clock) {
     core.clk = clock;
 }
 
-struct Vnes_controller_adapter : public Vnes_controller_tb
-{
-    void setClock(uint64_t clock) { clk = clock; }
-};
-
 using UUT = Vnes_controller_tb;
 
 struct NesControllerFixture : TestFixture<UUT> {
@@ -24,6 +19,7 @@ struct NesControllerFixture : TestFixture<UUT> {
         buttonsValid(makeOutput(&UUT::o_valid)),
         buttons(makeOutput(&UUT::o_buttons))
     {
+        bench.openTrace(vcdNameForCurrentTest().c_str());
     }
 };
 
@@ -46,8 +42,7 @@ TEST_CASE_METHOD(Fixture, "Idle outputs", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Controller signals", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-signals.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}});
+    readButtons.addInputs({{4, 1}, {5, 0}});
 
     bench.tick(100);
 
@@ -69,8 +64,7 @@ TEST_CASE_METHOD(Fixture, "Controller signals", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Read no buttons", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-no-buttons.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}}); // Start reading
+    readButtons.addInputs({{4, 1}, {5, 0}}); // Start reading
     controllerData.addInputs({{1, 1}});
 
     bench.tick(100);
@@ -83,8 +77,7 @@ TEST_CASE_METHOD(Fixture, "Read no buttons", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Read button A", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-button-a.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}}); // Start reading
+    readButtons.addInputs({{4, 1}, {5, 0}}); // Start reading
     controllerData.addInputs({
         {1,  1},            // Initially up
         {6,  0},            // Button A down
@@ -111,8 +104,7 @@ TEST_CASE_METHOD(Fixture, "Read button A", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Read button B", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-button-B.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}}); // Start reading
+    readButtons.addInputs({{4, 1}, {5, 0}}); // Start reading
     controllerData.addInputs({
         {1,  1},            // Initially up
         {16, 0},            // Button B down
@@ -139,8 +131,7 @@ TEST_CASE_METHOD(Fixture, "Read button B", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Read button A, Select, Start", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-button-a-sel-start.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}}); // Start reading
+    readButtons.addInputs({{4, 1}, {5, 0}}); // Start reading
     controllerData.addInputs({
         {1,  1},    // Initially up
         {6,  0},    // Button A down
@@ -169,8 +160,7 @@ TEST_CASE_METHOD(Fixture, "Read button A, Select, Start", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Read button right", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-button-a.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}}); // Start reading
+    readButtons.addInputs({{4, 1}, {5, 0}}); // Start reading
     controllerData.addInputs({
         {1,  1},            // Initially up
         {76, 0},            // Right buttons down
@@ -196,8 +186,7 @@ TEST_CASE_METHOD(Fixture, "Read button right", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "All buttons down", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-all-buttons.vcd");
-    readButtons.addInputs({{5, 1}, {6, 0}}); // Start reading
+    readButtons.addInputs({{4, 1}, {5, 0}}); // Start reading
     controllerData.addInputs({
         {1,  1},    // Initially up
         {6,  0},    // Button A down
@@ -223,10 +212,9 @@ TEST_CASE_METHOD(Fixture, "All buttons down", "[project-01]")
 
 TEST_CASE_METHOD(Fixture, "Multiple reads", "[project-01]")
 {
-    bench.openTrace("/tmp/controller-multiple-reads.vcd");
     readButtons.addInputs({
-        {5,   1}, {6,   0},
-        {105, 1}, {106, 0},
+        {4,   1}, {5,   0},
+        {104, 1}, {105, 0},
     });
     controllerData.addInputs({
         {1,   1},   // Initially up

@@ -12,19 +12,11 @@ std::string currentTestName(void)
 std::string vcdNameForCurrentTest(void)
 {
     std::string s = sCurrentTestName;
-    std::string invalidChars = " :/<>*?|";
+    std::string invalidChars = " :/<>*?|+,";
     for (auto invalidChar : invalidChars) {
         std::replace(s.begin(), s.end(), invalidChar, '_');
     }
 
-    // std::replace(s.begin(), s.end(), ' ', '_');
-    // std::replace(s.begin(), s.end(), ':', '_');
-    // std::replace(s.begin(), s.end(), '/', '_');
-    // std::replace(s.begin(), s.end(), '<', '_');
-    // std::replace(s.begin(), s.end(), '>', '_');
-    // std::replace(s.begin(), s.end(), '*', '_');
-    // std::replace(s.begin(), s.end(), '?', '_');
-    // std::replace(s.begin(), s.end(), '|', '_');
     return s + ".vcd";
 }
 

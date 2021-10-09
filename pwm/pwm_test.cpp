@@ -1,16 +1,11 @@
 #include "test-common.hpp"
-#include "Vpwm_tb.h"
+#include "Vpwm.h"
 
-void setClock(Vpwm_tb& core, uint8_t clock) {
+void setClock(Vpwm& core, uint8_t clock) {
     core.i_clk = clock;
 }
 
-struct Vpwm_adapter : public Vpwm_tb
-{
-    void setClock(uint64_t clock) { i_clk = clock; }
-};
-
-using UUT = Vpwm_tb;
+using UUT = Vpwm;
 
 struct PwmFixture : TestFixture<UUT>
 {

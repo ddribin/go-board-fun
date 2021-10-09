@@ -8,6 +8,24 @@ find_package(Catch2 REQUIRED)
 
 include(CTest)
 
+function(test_setup TARGET_NAME)
+    include(Catch)
+    target_include_directories(${TARGET_NAME} PRIVATE
+        ${PROJECT_SOURCE_DIR}/common
+    )
+    target_sources(${TARGET_NAME} PRIVATE
+        ${PROJECT_SOURCE_DIR}/common/test-main.cpp
+    )
+    target_link_libraries(${TARGET_NAME} PRIVATE Catch2::Catch2)
+    catch_discover_tests(${TARGET_NAME})
+
+    # target_include_directories(${TARGET_NAME} PRIVATE ../common)
+    # target_link_libraries(${TARGET_NAME} PRIVATE
+    #     ${LIB_TARGET_NAME} Catch2::Catch2)
+    # catch_discover_tests(${TARGET_NAME})
+
+endfunction()
+
 add_subdirectory(verilatest)
 
 add_subdirectory(nes-controller)
